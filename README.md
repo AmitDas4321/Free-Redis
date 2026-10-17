@@ -280,13 +280,6 @@ Replace the placeholders with your actual details. The `default` username must m
 
 ⚠️ `redis://` is unencrypted. For a public network, prefer a properly configured TLS endpoint (`rediss://`) or use the SSH tunnel/private networking approach. With the SSH tunnel, use the local forwarded endpoint and port.
 
-Create a `.gitignore` file:
-
-```gitignore
-node_modules/
-.env
-```
-
 Run the test:
 
 ```powershell
