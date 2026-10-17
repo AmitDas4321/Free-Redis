@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/banner.png" alt="Free Redis — Google Cloud setup banner" width="100%">
+  <img src="./banner.jpg" alt="Free Redis — Google Cloud setup banner" width="100%">
 </p>
 
 <h1 align="center">🚀 Free Redis on Google Cloud</h1>
@@ -260,11 +260,12 @@ Test-NetConnection 127.0.0.1 -Port 6379
 
 ## 💻 Step 8 — Test from VS Code
 
-Create a project folder, open it in VS Code, and run:
+Clone this repository, open it in VS Code, and install the dependencies:
 
 ```powershell
-npm init -y
-npm install redis dotenv
+git clone https://github.com/AmitDas4321/Free-Redis.git
+cd Free-Redis
+npm install
 ```
 
 ### Create `.env`
@@ -286,7 +287,7 @@ node_modules/
 .env
 ```
 
-### Create `test-redis.cjs`
+### `test-redis.cjs` (Included in repository)
 
 ```javascript
 require("dotenv").config();
@@ -296,7 +297,7 @@ const { createClient } = require("redis");
 const redisUrl = process.env.REDIS_URL;
 
 if (!redisUrl) {
-  console.error("❌ REDIS_URL is missing. Check your .env file.");
+  console.error("❌ REDIS_URL missing from .env file");
   process.exit(1);
 }
 
@@ -323,21 +324,23 @@ async function testRedis() {
     console.log("PING response:", ping);
 
     await client.set("vscode_test", "Connection successful");
-    const value = await client.get("vscode_test");
 
+    const value = await client.get("vscode_test");
     console.log("Read test:", value);
 
     if (value === "Connection successful") {
       console.log("🎉 Redis read/write test passed!");
     } else {
-      console.error("❌ Redis read/write test failed.");
-      process.exitCode = 1;
+      console.log("❌ Redis read/write test failed!");
     }
   } catch (err) {
-    console.error("❌ Redis connection failed.");
+    console.error("\n❌ Redis connection failed");
     console.error("Error code:", err.code || "Not provided");
     console.error("Error message:", err.message);
-    process.exitCode = 1;
+
+    if (err.cause) {
+      console.error("Error cause:", err.cause.message || err.cause);
+    }
   } finally {
     if (client.isOpen) {
       try {
@@ -346,6 +349,8 @@ async function testRedis() {
         client.destroy();
       }
     }
+
+    console.log("Test finished.");
   }
 }
 
@@ -353,6 +358,12 @@ testRedis();
 ```
 
 Run the test:
+
+```powershell
+npm start
+```
+
+Or directly with Node.js:
 
 ```powershell
 node test-redis.cjs
@@ -366,6 +377,7 @@ Successful output should include:
 PING response: PONG
 Read test: Connection successful
 🎉 Redis read/write test passed!
+Test finished.
 ```
 
 🔎 If you see `Connection timeout`, test the TCP port first, then inspect the firewall, `bind` setting, authentication, client URL, and TLS configuration.
