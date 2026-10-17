@@ -105,7 +105,7 @@ sudo nano /etc/redis/redis.conf
 
 ### 🛡️ Recommended default: local-only Redis
 
-For applications running on the same VM, keep Redis bound to localhost:
+For applications running on the same VM, keep Redis bound to localhost (around **Line 70**: `bind 127.0.0.1 ::1`):
 
 ```conf
 bind 127.0.0.1 ::1
@@ -117,7 +117,7 @@ This is the safer default. For remote use, prefer a private network/VPN or an SS
 
 ### 🌐 Direct remote access (only with firewall restrictions)
 
-If direct remote access is absolutely required, Redis may need to listen on the VM’s network interfaces:
+If direct remote access is absolutely required, update **Line 70** (`bind 127.0.0.1 ::1`) so Redis listens on the VM’s network interfaces:
 
 ```conf
 bind 0.0.0.0
@@ -135,7 +135,7 @@ Generate a random secret on the VM:
 openssl rand -hex 32
 ```
 
-In `redis.conf`, configure the generated value:
+In `redis.conf`, find **Line 792** (`# requirepass foobared`), uncomment it, and configure the generated value:
 
 ```conf
 requirepass REPLACE_WITH_YOUR_LONG_RANDOM_PASSWORD
